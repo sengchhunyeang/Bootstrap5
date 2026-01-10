@@ -11,23 +11,35 @@ const DriveAPI = {
   async fetchFiles() {
     const config = Config.getConfig();
     const query = `'${config.folderId}' in parents and trashed = false`;
+    let allFiles = [];
+    let pageToken = null;
 
-    const url = `${Config.API_BASE_URL}/files?` +
-      `q=${encodeURIComponent(query)}` +
-      `&fields=files(${Config.FILE_FIELDS})` +
-      `&orderBy=name` +
-      `&pageSize=100` +
-      `&key=${config.apiKey}`;
+    do {
+      let url = `${Config.API_BASE_URL}/files?` +
+        `q=${encodeURIComponent(query)}` +
+        `&fields=files(${Config.FILE_FIELDS}),nextPageToken` +
+        `&orderBy=name` +
+        `&pageSize=1000` +
+        `&key=${config.apiKey}`;
 
-    const response = await fetch(url);
+      if (pageToken) {
+        url += `&pageToken=${pageToken}`;
+      }
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error?.message || 'Failed to fetch files');
-    }
+      const response = await fetch(url);
 
-    const data = await response.json();
-    return data.files || [];
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error?.message || 'Failed to fetch files');
+      }
+
+      const data = await response.json();
+      allFiles = allFiles.concat(data.files || []);
+      pageToken = data.nextPageToken;
+
+    } while (pageToken);
+
+    return allFiles;
   },
 
   /**
