@@ -10,7 +10,7 @@ const Config = {
   // Default configuration values
   DEFAULTS: {
     apiKey: 'AIzaSyDKeHkM5lFeq2bZ5byGQEpwlVbSeEgIRnI',
-    folderId: '17hlzCkzRvDwgizSOcTDjSTRA8cae5hhP',
+    folderId: '1vmJQJ-h8n4vUOYBjIwFJEtIbU5Db0J0m',
     viewMode: 'grid',
     sortBy: 'name',
     theme: 'dark'
