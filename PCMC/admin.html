@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PCMC - Admin Settings</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+
+  <!-- ========== Header ========== -->
+  <header class="bg-gray-800 border-b border-gray-700/50">
+    <div class="container mx-auto px-4 py-3">
+      <div class="flex items-center justify-between">
+        <!-- Logo & Title -->
+        <div class="flex items-center gap-3">
+          <a href="index.html" class="flex items-center gap-3 logo-glow">
+            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+              <i class="fas fa-cog text-white"></i>
+            </div>
+            <div>
+              <h1 class="text-xl font-bold text-white">PCMC Admin</h1>
+              <p class="text-xs text-gray-400">Settings & Configuration</p>
+            </div>
+          </a>
+        </div>
+
+        <!-- Back Button -->
+        <a href="index.html"
+          class="flex items-center gap-2 bg-gray-700 text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-600 transition">
+          <i class="fas fa-arrow-left"></i>
+          <span class="hidden sm:inline">Back to Files</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== Main Content ========== -->
+  <main class="container mx-auto px-4 py-8 max-w-3xl">
+
+    <!-- Security Warning -->
+    <div class="security-banner bg-gray-800/50 rounded-xl p-4 mb-6 flex items-start gap-3">
+      <i class="fas fa-shield-alt text-yellow-400 mt-0.5"></i>
+      <div class="text-sm">
+        <p class="font-medium text-yellow-400 mb-1">Security Notice</p>
+        <p class="text-gray-400">API key is stored in your browser's localStorage. Keep it secure and never share it publicly.</p>
+      </div>
+    </div>
+
+    <!-- Connection Status Card -->
+    <div class="bg-gray-800/50 border border-gray-700/50 rounded-xl p-5 mb-6 settings-card">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-bold flex items-center gap-2">
+          <i class="fas fa-plug text-blue-400"></i>
+          Connection Status
+        </h2>
+        <div class="flex items-center gap-2">
+          <div id="connection-indicator" class="w-3 h-3 rounded-full bg-gray-500 animate-pulse"></div>
+          <span id="connection-text" class="text-sm text-gray-400">Checking...</span>
+        </div>
+      </div>
+
+      <div class="grid gap-3 text-sm">
+        <div class="flex items-center justify-between py-2 border-b border-gray-700/50">
+          <span class="text-gray-400">API Key:</span>
+          <code id="current-api-key" class="bg-gray-700/50 px-2 py-1 rounded text-xs font-mono">****</code>
+        </div>
+        <div class="flex items-center justify-between py-2">
+          <span class="text-gray-400">Folder ID:</span>
+          <code id="current-folder-id" class="bg-gray-700/50 px-2 py-1 rounded text-xs font-mono truncate max-w-[200px]">****</code>
+        </div>
+      </div>
+    </div>
+
+    <!-- API Key Settings -->
+    <div class="bg-gray-800/50 border border-gray-700/50 rounded-xl p-5 mb-6 settings-card admin-section">
+      <h2 class="text-lg font-bold flex items-center gap-2 mb-4">
+        <i class="fas fa-key text-yellow-400"></i>
+        API Key Settings
+      </h2>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-2">Google Drive API Key</label>
+          <div class="relative">
+            <input type="password" id="api-key-input" placeholder="AIzaSy..."
+              class="w-full px-4 py-2.5 pr-20 bg-gray-700/50 border border-gray-600/50 rounded-lg
+                     focus:border-blue-500 transition input-field font-mono text-sm">
+            <button id="api-key-toggle"
+              class="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-white transition"
+              title="Toggle visibility">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <p class="text-xs text-gray-500 mt-1.5">Get your API key from <a href="https://console.cloud.google.com" target="_blank" class="text-blue-400 hover:underline">Google Cloud Console</a></p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button id="test-api-key"
+            class="flex items-center gap-2 bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-600 transition">
+            <i class="fas fa-vial"></i>
+            Test API Key
+          </button>
+          <div id="api-key-status" class="hidden text-sm"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Folder Settings -->
+    <div class="bg-gray-800/50 border border-gray-700/50 rounded-xl p-5 mb-6 settings-card admin-section">
+      <h2 class="text-lg font-bold flex items-center gap-2 mb-4">
+        <i class="fas fa-folder text-blue-400"></i>
+        Folder Settings
+      </h2>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-2">Google Drive Folder ID or URL</label>
+          <input type="text" id="folder-input" placeholder="Folder ID or full Google Drive URL"
+            class="w-full px-4 py-2.5 bg-gray-700/50 border border-gray-600/50 rounded-lg
+                   focus:border-blue-500 transition input-field text-sm">
+          <p class="text-xs text-gray-500 mt-1.5">Paste the folder ID or the full Google Drive folder URL</p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button id="test-folder"
+            class="flex items-center gap-2 bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-600 transition">
+            <i class="fas fa-folder-open"></i>
+            Test Folder Access
+          </button>
+          <div id="folder-status" class="hidden text-sm"></div>
+        </div>
+
+        <!-- Validated folder name -->
+        <div class="hidden bg-green-500/10 border border-green-500/30 rounded-lg p-3 text-sm">
+          <span class="text-gray-400">Folder name:</span>
+          <span id="validated-folder-name" class="text-green-400 font-medium ml-2"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="bg-gray-800/50 border border-gray-700/50 rounded-xl p-5 settings-card">
+      <h2 class="text-lg font-bold flex items-center gap-2 mb-4">
+        <i class="fas fa-save text-green-400"></i>
+        Save Settings
+      </h2>
+
+      <div class="flex flex-wrap gap-3">
+        <button id="save-settings"
+          class="flex items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-blue-500 transition shadow-lg shadow-blue-600/20 btn-primary">
+          <i class="fas fa-save"></i>
+          Save Settings
+        </button>
+
+        <button id="reset-settings"
+          class="flex items-center gap-2 bg-red-600/20 text-red-400 border border-red-500/30 px-5 py-2.5 rounded-lg font-medium hover:bg-red-600/30 transition btn-danger">
+          <i class="fas fa-undo"></i>
+          Reset to Default
+        </button>
+      </div>
+
+      <p class="text-xs text-gray-500 mt-4">
+        <i class="fas fa-info-circle mr-1"></i>
+        Settings are saved to your browser's localStorage and persist across sessions.
+      </p>
+    </div>
+
+    <!-- Help Section -->
+    <div class="mt-8 text-center text-sm text-gray-500">
+      <p class="mb-2">Need help setting up Google Drive API?</p>
+      <div class="flex items-center justify-center gap-4">
+        <a href="https://console.cloud.google.com/apis/library/drive.googleapis.com" target="_blank"
+          class="text-blue-400 hover:underline flex items-center gap-1">
+          <i class="fas fa-external-link-alt text-xs"></i>
+          Enable Drive API
+        </a>
+        <a href="https://console.cloud.google.com/apis/credentials" target="_blank"
+          class="text-blue-400 hover:underline flex items-center gap-1">
+          <i class="fas fa-external-link-alt text-xs"></i>
+          Create Credentials
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========== Toast ========== -->
+  <div id="admin-toast" class="fixed bottom-4 right-4 z-50 translate-y-full opacity-0 transition-all duration-300">
+    <div class="bg-gray-800 border border-gray-700/50 rounded-xl shadow-2xl p-3 flex items-center gap-3 max-w-xs">
+      <i id="admin-toast-icon" class="fas fa-check-circle text-green-400"></i>
+      <p id="admin-toast-message" class="text-sm">Success</p>
+    </div>
+  </div>
+
+  <!-- ========== Scripts ========== -->
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/admin.js"></script>
+
+</body>
+</html>
